@@ -1,0 +1,29 @@
+<?php
+// This file is generated. Do not modify it manually.
+return array(
+	'what-snap-app' => array(
+		'$schema' => 'https://schemas.wp.org/trunk/block.json',
+		'apiVersion' => 3,
+		'name' => 'create-block/what-snap-app',
+		'version' => '0.1.0',
+		'title' => 'What Snap App',
+		'category' => 'widgets',
+		'icon' => 'smiley',
+		'description' => 'Example block scaffolded with Create Block tool.',
+		'attributes' => array(
+			'message' => array(
+				'type' => 'string',
+				'default' => 'Hello! I am interested in your services.'
+			)
+		),
+		'supports' => array(
+			'html' => false
+		),
+		'textdomain' => 'what-snap-app',
+		'editorScript' => 'file:./index.js',
+		'editorStyle' => 'file:./index.css',
+		'style' => 'file:./style-index.css',
+		'render' => 'file:./render.php',
+		'viewScript' => 'file:./view.js'
+	)
+);
