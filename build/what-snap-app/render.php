@@ -2,11 +2,13 @@
 // render.php
 $message = isset($attributes['message']) ? $attributes['message'] : 'Hello! I am interested in your services.';
 $encoded_message = urlencode($message);
-$whatsapp_url = "https://wa.me/1234567890?text=" . $encoded_message;
+
+$phone = get_option('wsa_phone_number', '1234567890');
+$whatsapp_url = "https://wa.me/" . esc_attr($phone) . "?text=" . $encoded_message;
+// $whatsapp_url = "https://wa.me/1234567890?text=" . $encoded_message;
 // Generate a unique ID for this specific block instance
 $unique_id = uniqid('whatsapp_');
 ?>
-
 <div <?php echo get_block_wrapper_attributes(['id' => $unique_id]); ?>>
     <a href="<?php echo esc_url($whatsapp_url); ?>" class="whatsapp-btn" target="_blank" rel="noopener">
         <svg class="whatsapp-icon" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
