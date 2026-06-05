@@ -29,10 +29,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
- // Correct imports
 
 
-// ... (keep all your existing imports)
 
 function Edit({
   attributes,
@@ -46,21 +44,29 @@ function Edit({
     id: `whatsapp-block-${clientId}`
   });
   const [dynamicSettings, setDynamicSettings] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)(null);
+  const [error, setError] = (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useState)(null);
   (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_4__.useEffect)(() => {
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3___default()({
       path: '/wsa/v1/settings'
     }).then(data => {
       setDynamicSettings(data);
+    }).catch(err => {
+      console.error("WSA API Error:", err);
+      setError(err);
     });
   }, []);
+  if (error) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("p", {
+    children: "Error loading settings. Check console."
+  });
   if (!dynamicSettings) return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, {});
   const buttonStyle = {
     backgroundColor: dynamicSettings.bg_color,
     color: dynamicSettings.text_color
   };
   const iconStyle = {
-    width: dynamicSettings.icon_size,
-    height: dynamicSettings.icon_size
+    width: dynamicSettings.icon_size + 'px',
+    height: dynamicSettings.icon_size + 'px',
+    fill: dynamicSettings.text_color
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     ...blockProps,
@@ -94,7 +100,7 @@ function Edit({
             fill: dynamicSettings.text_color
           })
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
-          children: "Chat on WhatsApp"
+          children: dynamicSettings.button_text
         })]
       })
     })]
