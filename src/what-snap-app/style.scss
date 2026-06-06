@@ -4,33 +4,26 @@
     padding: 10px;
 
     .whatsapp-btn {
-            display: inline-flex;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 20px;
+        border-radius: 50px;
+        text-decoration: none;
+        /* Button background is applied to .whatsapp-btn */
+
+        .whatsapp-icon-wrapper {
+            display: flex;
             align-items: center;
-            gap: 10px; /* Space between icon and text */
-            background-color: #25D366;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-family: Arial, sans-serif;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            justify-content: center;
+            /* Icon background is applied here */
         }
 
-        .whatsapp-btn:hover {
-            background-color: #128C7E;
-        }
-
-        /* Controlling the SVG Size via CSS */
         .whatsapp-icon {
-            width: 30px;
-            height: 30px;
             display: block;
+            /* Icon fill is handled by the text color */
         }
+    }
 
-        /* Ensuring the SVG path takes the color of the text */
-        .whatsapp-icon path {
-            fill: white;
-        }
+
 }

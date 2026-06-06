@@ -31,7 +31,3 @@
   height: 30px;
   display: block;
 }
-/* Ensuring the SVG path takes the color of the text */
-.whatsapp-icon path {
-  fill: white;
-}

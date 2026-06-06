@@ -9,31 +9,19 @@
 .wp-block-create-block-what-snap-app .whatsapp-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px; /* Space between icon and text */
-  background-color: #25D366;
-  color: white;
-  padding: 12px 24px;
+  gap: 10px;
+  padding: 10px 20px;
   border-radius: 50px;
   text-decoration: none;
-  font-family: Arial, sans-serif;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  /* Button background is applied to .whatsapp-btn */
 }
-.wp-block-create-block-what-snap-app .whatsapp-btn:hover {
-  background-color: #128C7E;
+.wp-block-create-block-what-snap-app .whatsapp-btn .whatsapp-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Icon background is applied here */
 }
-.wp-block-create-block-what-snap-app {
-  /* Controlling the SVG Size via CSS */
-}
-.wp-block-create-block-what-snap-app .whatsapp-icon {
-  width: 30px;
-  height: 30px;
+.wp-block-create-block-what-snap-app .whatsapp-btn .whatsapp-icon {
   display: block;
-}
-.wp-block-create-block-what-snap-app {
-  /* Ensuring the SVG path takes the color of the text */
-}
-.wp-block-create-block-what-snap-app .whatsapp-icon path {
-  fill: white;
+  /* Icon fill is handled by the text color */
 }
