@@ -1,11 +1,12 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps } from '@wordpress/block-editor';
-import { Spinner } from '@wordpress/components';
+import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
+import { PanelBody, TextControl, Spinner } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { useState, useEffect } from '@wordpress/element';
 import './editor.scss';
 
-export default function Edit({ attributes, clientId }) {
+export default function Edit({ attributes, setAttributes, clientId }) {
+    const { message } = attributes;
     const blockProps = useBlockProps({ id: `whatsapp-block-${clientId}` });
     const [dynamicSettings, setDynamicSettings] = useState(null);
     const [error, setError] = useState(null);
@@ -26,9 +27,19 @@ export default function Edit({ attributes, clientId }) {
 
     return (
         <div {...blockProps}>
+            <InspectorControls>
+                <PanelBody title={__('WhatsApp Settings', 'what-snap-app')}>
+                    <TextControl
+                        label={__('Message', 'what-snap-app')}
+                        value={message}
+                        onChange={(val) => setAttributes({ message: val })}
+                    />
+                </PanelBody>
+            </InspectorControls>
+
             <div className="what-snap-app-button-preview">
                 <a href="#" className="whatsapp-btn" onClick={(e) => e.preventDefault()} style={{ backgroundColor: dynamicSettings.bg_color, color: dynamicSettings.text_color }}>
-                    <span className="whatsapp-icon-wrapper" >
+                    <span className="whatsapp-icon-wrapper">
                         <svg className="whatsapp-icon" style={{ width: dynamicSettings.icon_size + 'px', height: dynamicSettings.icon_size + 'px' }} viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
                             <path 
                                 fillRule="evenodd" 
