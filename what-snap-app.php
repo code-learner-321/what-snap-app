@@ -47,10 +47,26 @@ function wsa_register_settings()
     register_setting('wsa_options_group', 'wsa_icon_size');
     register_setting('wsa_options_group', 'wsa_button_text');
     register_setting('wsa_options_group', 'wsa_icon_bg_color');
+
+    // New Settings
+    register_setting('wsa_options_group', 'wsa_border_radius');
+    register_setting('wsa_options_group', 'wsa_box_shadow_enabled');
+    register_setting('wsa_options_group', 'wsa_box_shadow_x');
+    register_setting('wsa_options_group', 'wsa_box_shadow_y');
+    register_setting('wsa_options_group', 'wsa_box_shadow_color');
+    register_setting('wsa_options_group', 'wsa_hover_box_shadow_enabled');
+    register_setting('wsa_options_group', 'wsa_hover_box_shadow_x');
+    register_setting('wsa_options_group', 'wsa_hover_box_shadow_y');
+    register_setting('wsa_options_group', 'wsa_hover_box_shadow_color');
+    register_setting('wsa_options_group', 'wsa_font_family');
+    register_setting('wsa_options_group', 'wsa_font_weight');
 }
 
 function wsa_options_page()
+// Define your font options
 {
+    $fonts = ['sans-serif', 'serif', 'monospace', 'Arial', 'Helvetica', 'Roboto', 'Open Sans'];
+
 ?>
     <div class="wrap">
         <h1>What Snap App Button Settings</h1>
@@ -66,6 +82,66 @@ function wsa_options_page()
                     <tr>
                         <th>Button Text</th>
                         <td><input type="text" id="wsa_text_input" name="wsa_button_text" value="<?php echo esc_attr(get_option('wsa_button_text', 'Chat on WhatsApp')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Border Radius (px)</th>
+                        <td><input type="number" name="wsa_border_radius" value="<?php echo esc_attr(get_option('wsa_border_radius', '50')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Enable Box Shadow</th>
+                        <td><input type="checkbox" name="wsa_box_shadow_enabled" value="1" <?php checked(1, get_option('wsa_box_shadow_enabled'), true); ?> /></td>
+                    </tr>
+                    <tr>
+                        <th>Shadow X (px)</th>
+                        <td><input type="number" step="1" id="wsa_box_shadow_x" name="wsa_box_shadow_x" value="<?php echo esc_attr(get_option('wsa_box_shadow_x', '0')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Shadow Y (px)</th>
+                        <td><input type="number" step="1" id="wsa_box_shadow_y" name="wsa_box_shadow_y" value="<?php echo esc_attr(get_option('wsa_box_shadow_y', '8')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Shadow Color</th>
+                        <td><input type="color" id="wsa_box_shadow_color" name="wsa_box_shadow_color" value="<?php echo esc_attr(get_option('wsa_box_shadow_color', '#000000')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Enable Hover Shadow</th>
+                        <td><input type="checkbox" name="wsa_hover_box_shadow_enabled" value="1" <?php checked(1, get_option('wsa_hover_box_shadow_enabled'), true); ?> /></td>
+                    </tr>
+                    <tr>
+                        <th>Hover Shadow X (px)</th>
+                        <td><input type="number" step="1" id="wsa_hover_box_shadow_x" name="wsa_hover_box_shadow_x" value="<?php echo esc_attr(get_option('wsa_hover_box_shadow_x', '0')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Hover Shadow Y (px)</th>
+                        <td><input type="number" step="1" id="wsa_hover_box_shadow_y" name="wsa_hover_box_shadow_y" value="<?php echo esc_attr(get_option('wsa_hover_box_shadow_y', '14')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Hover Shadow Color</th>
+                        <td><input type="color" id="wsa_hover_box_shadow_color" name="wsa_hover_box_shadow_color" value="<?php echo esc_attr(get_option('wsa_hover_box_shadow_color', '#000000')); ?>" /></td>
+                    </tr>
+                    <tr>
+                        <th>Font Family</th>
+                        <td>
+                            <select name="wsa_font_family" id="wsa_font_family_select">
+                                <?php foreach ($fonts as $font): ?>
+                                    <option value="<?php echo $font; ?>" <?php selected(get_option('wsa_font_family'), $font); ?>><?php echo $font; ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Font Weight</th>
+                        <td>
+                            <select name="wsa_font_weight" id="wsa_font_weight_select">
+                                <?php
+                                $weights = ['300', '400', '500', '600', '700', '800', '900'];
+                                $current = get_option('wsa_font_weight', '400');
+                                foreach ($weights as $w) {
+                                    echo '<option value="' . $w . '" ' . selected($current, $w, false) . '>' . $w . '</option>';
+                                }
+                                ?>
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <th>BG Color</th>
@@ -87,7 +163,7 @@ function wsa_options_page()
                 <?php submit_button(); ?>
             </div>
 
-            <div style="background: #f9f9f9; padding: 30px; border: 1px solid #ddd; border-radius: 8px; flex: 1; text-align: center;">
+            <div style="background: #f9f9f9; padding: 30px; border: 1px solid #ddd; border-radius: 8px; flex: 1; text-align: center; position: sticky; top: 20px; align-self: flex-start;">
                 <h3>Live Preview</h3>
 
                 <a href="#" id="live-whatsapp-btn" class="whatsapp-btn" style="
@@ -95,11 +171,11 @@ function wsa_options_page()
                     align-items: center; 
                     gap: 10px; 
                     padding: 12px 20px; 
-                    border-radius: 50px; 
+                    border-radius: <?php echo esc_attr(get_option('wsa_border_radius', '30')); ?>px; 
                     text-decoration: none; 
                     background-color: <?php echo esc_attr(get_option('wsa_bg_color', '#25D366')); ?>; 
-                    color: <?php echo esc_attr(get_option('wsa_text_color', '#ffffff')); ?>;
-                ">
+                    color: <?php echo esc_attr(get_option('wsa_text_color', '#ffffff')); ?>;                    border: none;
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;                ">
                     <span id="live-icon-wrapper" class="whatsapp-icon-wrapper" style="
                         display: flex; 
                         align-items: center; 
@@ -129,30 +205,169 @@ function wsa_options_page()
             const textInput = document.getElementById('wsa_text');
             const sizeInput = document.getElementById('wsa_size');
             const labelInput = document.getElementById('wsa_text_input');
-            
+
             const btn = document.getElementById('live-whatsapp-btn');
-            const iconWrapper = document.getElementById('live-icon-wrapper');
             const icon = document.getElementById('live-whatsapp-icon');
             const btnText = document.getElementById('live-button-text');
 
+            const fontSelect = document.getElementById('wsa_font_family_select');
+            const weightSelect = document.getElementById('wsa_font_weight_select');
+
+            const borderRadiusInput = document.querySelector('[name="wsa_border_radius"]');
+            const boxShadowEnabled = document.querySelector('[name="wsa_box_shadow_enabled"]');
+            const boxShadowXInput = document.getElementById('wsa_box_shadow_x');
+            const boxShadowYInput = document.getElementById('wsa_box_shadow_y');
+            const boxShadowColorInput = document.getElementById('wsa_box_shadow_color');
+
+            const hoverShadowEnabled = document.querySelector('[name="wsa_hover_box_shadow_enabled"]');
+            const hoverShadowXInput = document.getElementById('wsa_hover_box_shadow_x');
+            const hoverShadowYInput = document.getElementById('wsa_hover_box_shadow_y');
+            const hoverShadowColorInput = document.getElementById('wsa_hover_box_shadow_color');
+
+            let currentBaseShadow = 'none';
+            let currentHoverShadow = 'none';
+
+            function hexToRgb(hex) {
+                const cleaned = hex.replace('#', '');
+                const normalized = cleaned.length === 3 ? cleaned.split('').map(ch => ch + ch).join('') : cleaned;
+                return {
+                    r: parseInt(normalized.slice(0, 2), 16),
+                    g: parseInt(normalized.slice(2, 4), 16),
+                    b: parseInt(normalized.slice(4, 6), 16)
+                };
+            }
+
+            function buildShadow(x, y, color, alpha) {
+                if (!color) {
+                    return 'none';
+                }
+                const rgb = hexToRgb(color);
+                return `${x}px ${y}px 18px rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`;
+            }
+
+            function updateShadows() {
+                const baseX = boxShadowXInput ? Number(boxShadowXInput.value || 0) : 0;
+                const baseY = boxShadowYInput ? Number(boxShadowYInput.value || 0) : 0;
+                const baseColor = boxShadowColorInput ? boxShadowColorInput.value : '#000000';
+                const hoverX = hoverShadowXInput ? Number(hoverShadowXInput.value || 0) : 0;
+                const hoverY = hoverShadowYInput ? Number(hoverShadowYInput.value || 0) : 0;
+                const hoverColor = hoverShadowColorInput ? hoverShadowColorInput.value : '#000000';
+
+                currentBaseShadow = boxShadowEnabled && boxShadowEnabled.checked
+                    ? buildShadow(baseX, baseY, baseColor, 0.18)
+                    : 'none';
+
+                currentHoverShadow = hoverShadowEnabled && hoverShadowEnabled.checked
+                    ? buildShadow(hoverX, hoverY, hoverColor, 0.25)
+                    : currentBaseShadow;
+            }
+
             function updatePreview() {
-                btn.style.backgroundColor = bgInput.value;
-                btn.style.color = textInput.value;
-                icon.style.width = sizeInput.value + 'px';
-                icon.style.height = sizeInput.value + 'px';
-                
-                // Target the path element inside the SVG
-                const path = icon.querySelector('path');
-                if (path) {
+                if (borderRadiusInput) {
+                    btn.style.borderRadius = borderRadiusInput.value + 'px';
+                }
+
+                btn.style.border = 'none';
+                btn.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+                btn.style.boxShadow = currentBaseShadow;
+
+                if (bgInput) {
+                    btn.style.backgroundColor = bgInput.value;
+                }
+
+                if (textInput) {
+                    btn.style.color = textInput.value;
+                }
+
+                if (sizeInput && icon) {
+                    icon.style.width = sizeInput.value + 'px';
+                    icon.style.height = sizeInput.value + 'px';
+                }
+
+                if (fontSelect) {
+                    btn.style.fontFamily = fontSelect.value;
+                }
+
+                if (weightSelect) {
+                    btn.style.fontWeight = weightSelect.value;
+                }
+
+                const path = icon ? icon.querySelector('path') : null;
+                if (path && iconBgInput) {
                     path.setAttribute('fill', iconBgInput.value);
                 }
-                
-                btnText.textContent = labelInput.value;
+
+                if (btnText && labelInput) {
+                    btnText.textContent = labelInput.value;
+                }
             }
-            [bgInput, iconBgInput, textInput, sizeInput, labelInput].forEach(el => el.addEventListener('input', updatePreview));
+
+            function applyHoverState() {
+                if (hoverShadowEnabled && hoverShadowEnabled.checked) {
+                    btn.style.boxShadow = currentHoverShadow;
+                    btn.style.transform = 'translateY(-2px)';
+                } else {
+                    btn.style.boxShadow = currentBaseShadow;
+                    btn.style.transform = 'translateY(0)';
+                }
+            }
+
+            const inputs = [
+                bgInput,
+                iconBgInput,
+                textInput,
+                sizeInput,
+                labelInput,
+                borderRadiusInput,
+                boxShadowEnabled,
+                boxShadowXInput,
+                boxShadowYInput,
+                boxShadowColorInput,
+                hoverShadowEnabled,
+                hoverShadowXInput,
+                hoverShadowYInput,
+                hoverShadowColorInput,
+                fontSelect,
+                weightSelect
+            ].filter(Boolean);
+
+            inputs.forEach(input => {
+                const eventType = input.type === 'checkbox' ? 'change' : 'input';
+                input.addEventListener(eventType, function() {
+                    updateShadows();
+                    updatePreview();
+                });
+                input.addEventListener('change', function() {
+                    updateShadows();
+                    updatePreview();
+                });
+            });
+
+            btn.addEventListener('mouseenter', applyHoverState);
+            btn.addEventListener('mouseleave', function() {
+                btn.style.boxShadow = currentBaseShadow;
+                btn.style.transform = 'translateY(0)';
+            });
+
+            updateShadows();
+            updatePreview();
         });
     </script>
 <?php
+}
+
+function wsa_hex_to_rgba($hex, $alpha = 1)
+{
+    $hex = str_replace('#', '', $hex);
+    if (strlen($hex) === 3) {
+        $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+    }
+
+    $r = hexdec(substr($hex, 0, 2));
+    $g = hexdec(substr($hex, 2, 2));
+    $b = hexdec(substr($hex, 4, 2));
+
+    return sprintf('rgba(%d, %d, %d, %.2f)', $r, $g, $b, $alpha);
 }
 
 // Inject Dynamic CSS to Front-End
@@ -162,11 +377,46 @@ function wsa_inject_dynamic_css()
     $bg   = get_option('wsa_bg_color', '#25D366');
     $text = get_option('wsa_text_color', '#ffffff');
     $size = get_option('wsa_icon_size', '30');
+
+    $br = get_option('wsa_border_radius', '50');
+    $shadow_enabled = get_option('wsa_box_shadow_enabled');
+    $shadow_x = get_option('wsa_box_shadow_x', '0');
+    $shadow_y = get_option('wsa_box_shadow_y', '8');
+    $shadow_color = get_option('wsa_box_shadow_color', '#000000');
+
+    $hover_enabled = get_option('wsa_hover_box_shadow_enabled');
+    $hover_x = get_option('wsa_hover_box_shadow_x', '0');
+    $hover_y = get_option('wsa_hover_box_shadow_y', '14');
+    $hover_color = get_option('wsa_hover_box_shadow_color', '#000000');
+
+    $ff = get_option('wsa_font_family', 'sans-serif');
+    $fw = get_option('wsa_font_weight', '700');
+
+    $base_shadow = $shadow_enabled
+        ? sprintf('%spx %spx 18px %s', $shadow_x, $shadow_y, wsa_hex_to_rgba($shadow_color, 0.18))
+        : 'none';
+
+    $hover_shadow = $hover_enabled
+        ? sprintf('%spx %spx 24px %s', $hover_x, $hover_y, wsa_hex_to_rgba($hover_color, 0.25))
+        : $base_shadow;
+
     echo "<style>
-        .whatsapp-btn { background-color: {$bg} !important; color: {$text} !important; }
-        .whatsapp-icon-wrapper { border-radius: 50%; display: inline-flex; padding: 5px; }
-        .whatsapp-icon { width: {$size}px !important; height: {$size}px !important; fill: {$text} !important; }
-    </style>";
+    .whatsapp-btn { 
+        background-color: {$bg} !important; 
+        color: {$text} !important; 
+        border-radius: {$br}px !important;
+        box-shadow: {$base_shadow} !important;
+        border: none !important;
+        font-family: {$ff} !important;
+        font-weight: {$fw} !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .whatsapp-btn:hover { 
+        box-shadow: {$hover_shadow} !important;
+    }
+    .whatsapp-icon-wrapper { border-radius: {$br}px !important; display: inline-flex; padding: 5px; }
+    .whatsapp-icon { width: {$size}px !important; height: {$size}px !important; fill: {$text} !important; }
+</style>";
 }
 
 // Pass settings to the block editor
@@ -179,7 +429,7 @@ function wsa_enqueue_block_editor_assets()
         'icon_size'  => get_option('wsa_icon_size', '30') . 'px',
     ];
     wp_add_inline_script(
-        'what-snap-app-editor-script', 
+        'what-snap-app-editor-script',
         'window.wsaGlobalSettings = ' . json_encode($settings) . ';'
     );
 }
@@ -194,7 +444,19 @@ add_action('rest_api_init', function () {
                 'text_color'  => get_option('wsa_text_color', '#ffffff'),
                 'icon_size'   => get_option('wsa_icon_size', '30'),
                 'button_text' => get_option('wsa_button_text', 'Chat on WhatsApp'),
-                'icon_bg_color'  => get_option('wsa_icon_bg_color', '#ffffff')
+                'icon_bg_color'  => get_option('wsa_icon_bg_color', '#ffffff'),
+                'border_radius' => get_option('wsa_border_radius', '50'),
+                'box_shadow'    => get_option('wsa_box_shadow_enabled'),
+                'box_shadow_x'  => get_option('wsa_box_shadow_x', '0'),
+                'box_shadow_y'  => get_option('wsa_box_shadow_y', '8'),
+                'box_shadow_color' => get_option('wsa_box_shadow_color', '#000000'),
+                'hover_box_shadow' => get_option('wsa_hover_box_shadow_enabled'),
+                'hover_box_shadow_x' => get_option('wsa_hover_box_shadow_x', '0'),
+                'hover_box_shadow_y' => get_option('wsa_hover_box_shadow_y', '14'),
+                'hover_box_shadow_color' => get_option('wsa_hover_box_shadow_color', '#000000'),
+                'font_family'   => get_option('wsa_font_family', 'sans-serif'),
+                'font_weight'   => get_option('wsa_font_weight', '700'),
+                'font_weights'  => ['300', '400', '500', '600', '700', '800', '900']
             ];
         },
         'permission_callback' => '__return_true'

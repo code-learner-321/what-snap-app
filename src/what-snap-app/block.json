@@ -9,8 +9,7 @@
 	"description": "Example block scaffolded with Create Block tool.",
 	"attributes": {
 		"message": {
-			"type": "string",
-			"default": "Hello! I am interested in your services."
+			"type": "string"
 		}
 	},
 	"supports": {

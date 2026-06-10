@@ -24,6 +24,10 @@
 .whatsapp-btn:hover {
   background-color: #128C7E;
 }
+.whatsapp-btn.editor-hover-preview:hover {
+  box-shadow: var(--wsa-hover-shadow);
+  transform: translateY(-2px);
+}
 /* Controlling the SVG Size via CSS */
 .whatsapp-icon {
   width: 30px;

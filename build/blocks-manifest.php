@@ -12,8 +12,7 @@ return array(
 		'description' => 'Example block scaffolded with Create Block tool.',
 		'attributes' => array(
 			'message' => array(
-				'type' => 'string',
-				'default' => 'Hello! I am interested in your services.'
+				'type' => 'string'
 			)
 		),
 		'supports' => array(

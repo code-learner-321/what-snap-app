@@ -1,6 +1,6 @@
 <?php
 // render.php
-$message = isset($attributes['message']) ? $attributes['message'] : 'Hello! I am interested in your services.';
+$message = isset($attributes['message']) ? $attributes['message'] : '';
 $encoded_message = urlencode($message);
 
 $icon_bg_color = get_option('wsa_icon_bg_color', '#ffffff');
@@ -8,8 +8,6 @@ $icon_bg_color = get_option('wsa_icon_bg_color', '#ffffff');
 $phone = get_option('wsa_phone_number', '1234567890');
 $whatsapp_url = "https://wa.me/" . esc_attr($phone) . "?text=" . $encoded_message;
 $button_text = get_option('wsa_button_text', 'Chat on WhatsApp');
-// $whatsapp_url = "https://wa.me/1234567890?text=" . $encoded_message;
-// Generate a unique ID for this specific block instance
 $unique_id = uniqid('whatsapp_');
 ?>
 <div <?php echo get_block_wrapper_attributes(['id' => $unique_id]); ?>>

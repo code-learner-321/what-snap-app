@@ -11,17 +11,16 @@
   align-items: center;
   gap: 10px;
   padding: 10px 20px;
-  border-radius: 50px;
   text-decoration: none;
-  /* Button background is applied to .whatsapp-btn */
+  transition: all 0.3s ease;
 }
-.wp-block-create-block-what-snap-app .whatsapp-btn .whatsapp-icon-wrapper {
+.wp-block-create-block-what-snap-app .whatsapp-icon-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
   /* Icon background is applied here */
 }
-.wp-block-create-block-what-snap-app .whatsapp-btn .whatsapp-icon {
+.wp-block-create-block-what-snap-app .whatsapp-icon {
   display: block;
   /* Icon fill is handled by the text color */
 }
