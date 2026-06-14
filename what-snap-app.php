@@ -2,11 +2,11 @@
 
 /**
  * Plugin Name:       What Snap App
- * Description:       Example block scaffolded with Create Block tool.
+ * Description:       A high-performance hybrid WhatsApp button plugin for WordPress, enabling seamless one-click visitor communication for both Gutenberg and Elementor users.
  * Version:           0.1.0
  * Requires at least: 6.8
  * Requires PHP:      7.4
- * Author:            The WordPress Contributors
+ * Author:            Najubudeen
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       what-snap-app
@@ -20,16 +20,33 @@ if (! defined('ABSPATH')) {
 
 function create_block_what_snap_app_block_init()
 {
-    wp_register_block_types_from_metadata_collection(__DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php');
+    // wp_register_block_types_from_metadata_collection(__DIR__ . '/build/', __DIR__ . '/build/blocks-manifest.php');
+    register_block_type( __DIR__ . '/build/what-snap-app' );
 }
 add_action('init', 'create_block_what_snap_app_block_init');
 
-function elementor_code_pattern_addon()
+function what_snap_app_plugin_init()
 {
     require_once(__DIR__ . '/includes/plugin.php');
-    \Elementor_Code_Pattern_Addon\Plugin::instance();
+    \What_Snap_App_Addon\Plugin::instance();
 }
-add_action('plugins_loaded', 'elementor_code_pattern_addon');
+
+function wsa_enqueue_scripts() {
+    // Make sure jQuery is loaded
+    wp_enqueue_script('jquery');
+    
+    // Enqueue our custom script
+        wp_enqueue_style(
+        'wsa-style',
+        plugin_dir_url(__FILE__) . 'assets/css/wsa-elementor-widget-style.css',
+        array(),
+        '1.0.0'
+    );
+    
+}
+add_action('wp_enqueue_scripts', 'wsa_enqueue_scripts', 20);
+
+add_action('plugins_loaded', 'what_snap_app_plugin_init');
 
 // Settings Page Setup
 add_action('admin_menu', 'wsa_add_admin_menu');

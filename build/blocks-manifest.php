@@ -8,8 +8,8 @@ return array(
 		'version' => '0.1.0',
 		'title' => 'What Snap App',
 		'category' => 'widgets',
-		'icon' => 'smiley',
-		'description' => 'Example block scaffolded with Create Block tool.',
+		'icon' => 'format-status',
+		'description' => 'A high-performance hybrid WhatsApp button plugin for WordPress, offering seamless, one-click communication for Gutenberg and Elementor users.',
 		'attributes' => array(
 			'message' => array(
 				'type' => 'string'

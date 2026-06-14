@@ -1,5 +1,5 @@
 <?php
-namespace Elementor_Code_Pattern_Addon;
+namespace What_Snap_App_Addon;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -113,9 +113,9 @@ final class Plugin {
 
 	public function register_widgets( $widgets_manager ): void {
 
-		require_once( __DIR__ . '/widgets/elementor-code-pattern-scaffold-widget.php' );
+		require_once __DIR__ . '/widgets/elementor-code-pattern-scaffold-widget.php';
 
-		$widgets_manager->register( new Elementor_Code_Scaffold() );
+		$widgets_manager->register( new \What_Snap_App_Addon_Widgets\What_Snap_App_Widget() );
 
 	}
 	
