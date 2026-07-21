@@ -4,6 +4,7 @@
  * Plugin Name:       What Snap App
  * Description:       A high-performance hybrid WhatsApp button plugin for WordPress, enabling seamless one-click visitor communication for both Gutenberg and Elementor users.
  * Version:           0.1.0
+ * Requires Plugins: elementor
  * Requires at least: 6.8
  * Requires PHP:      7.4
  * Author:            Najubudeen
