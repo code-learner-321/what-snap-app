@@ -40,14 +40,16 @@ export default function Edit({ attributes, setAttributes, clientId }) {
 
             <div className="what-snap-app-button-preview">
                 {(() => {
-                    const baseShadow = dynamicSettings.box_shadow === '1'
+                    const isBoxShadowOn = dynamicSettings.box_shadow === undefined || String(dynamicSettings.box_shadow) === '1' || dynamicSettings.box_shadow === true;
+                    const isHoverShadowOn = dynamicSettings.hover_box_shadow === undefined || String(dynamicSettings.hover_box_shadow) === '1' || dynamicSettings.hover_box_shadow === true;
+                    const baseShadow = isBoxShadowOn
                         ? `${dynamicSettings.box_shadow_x}px ${dynamicSettings.box_shadow_y}px 18px rgba(0,0,0,0.18)`
                         : 'none';
-                    const hoverShadow = dynamicSettings.hover_box_shadow === '1'
+                    const hoverShadow = isHoverShadowOn
                         ? `${dynamicSettings.hover_box_shadow_x}px ${dynamicSettings.hover_box_shadow_y}px 24px rgba(0,0,0,0.25)`
                         : baseShadow;
                     const currentShadow = isHovered ? hoverShadow : baseShadow;
-                    const currentTransform = isHovered && dynamicSettings.hover_box_shadow === '1' ? 'translateY(-2px)' : 'translateY(0)';
+                    const currentTransform = isHovered && isHoverShadowOn ? 'translateY(-2px)' : 'translateY(0)';
 
                     return (
                         <a

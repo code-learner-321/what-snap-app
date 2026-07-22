@@ -56,33 +56,56 @@ function wsa_add_admin_menu()
     add_menu_page('What Snap App', 'What Snap App', 'manage_options', 'what-snap-app', 'wsa_options_page', 'dashicons-whatsapp', 90);
 }
 
+function wsa_get_default_options()
+{
+    return [
+        'wsa_phone_number'             => '1234567890',
+        'wsa_button_text'              => 'Chat on WhatsApp',
+        'wsa_border_radius'            => '50',
+        'wsa_box_shadow_enabled'       => '1',
+        'wsa_box_shadow_x'             => '0',
+        'wsa_box_shadow_y'             => '8',
+        'wsa_box_shadow_color'         => '#000000',
+        'wsa_hover_box_shadow_enabled' => '1',
+        'wsa_hover_box_shadow_x'       => '0',
+        'wsa_hover_box_shadow_y'       => '14',
+        'wsa_hover_box_shadow_color'   => '#000000',
+        'wsa_font_family'              => 'sans-serif',
+        'wsa_font_weight'              => '400',
+        'wsa_bg_color'                 => '#25D366',
+        'wsa_text_color'               => '#ffffff',
+        'wsa_icon_bg_color'            => '#ffffff',
+        'wsa_icon_size'                => '30',
+    ];
+}
+
+function wsa_reset_all_settings()
+{
+    foreach (wsa_get_default_options() as $key => $value) {
+        update_option($key, $value);
+    }
+}
+
 add_action('admin_init', 'wsa_register_settings');
 function wsa_register_settings()
 {
-    register_setting('wsa_options_group', 'wsa_phone_number');
-    register_setting('wsa_options_group', 'wsa_bg_color');
-    register_setting('wsa_options_group', 'wsa_text_color');
-    register_setting('wsa_options_group', 'wsa_icon_size');
-    register_setting('wsa_options_group', 'wsa_button_text');
-    register_setting('wsa_options_group', 'wsa_icon_bg_color');
-
-    // New Settings
-    register_setting('wsa_options_group', 'wsa_border_radius');
-    register_setting('wsa_options_group', 'wsa_box_shadow_enabled');
-    register_setting('wsa_options_group', 'wsa_box_shadow_x');
-    register_setting('wsa_options_group', 'wsa_box_shadow_y');
-    register_setting('wsa_options_group', 'wsa_box_shadow_color');
-    register_setting('wsa_options_group', 'wsa_hover_box_shadow_enabled');
-    register_setting('wsa_options_group', 'wsa_hover_box_shadow_x');
-    register_setting('wsa_options_group', 'wsa_hover_box_shadow_y');
-    register_setting('wsa_options_group', 'wsa_hover_box_shadow_color');
-    register_setting('wsa_options_group', 'wsa_font_family');
-    register_setting('wsa_options_group', 'wsa_font_weight');
+    $defaults = wsa_get_default_options();
+    foreach ($defaults as $key => $val) {
+        register_setting('wsa_options_group', $key, ['default' => $val]);
+        if (get_option($key) === false) {
+            add_option($key, $val);
+        }
+    }
 }
 
 function wsa_options_page()
-// Define your font options
 {
+    if (isset($_POST['wsa_reset_settings'])) {
+        check_admin_referer('wsa_options_group-options');
+        wsa_reset_all_settings();
+        echo '<div class="notice notice-success is-dismissible" style="margin-top: 15px;"><p><strong>Settings reset to default values fresh from scratch.</strong></p></div>';
+    }
+
     $fonts = ['sans-serif', 'serif', 'monospace', 'Arial', 'Helvetica', 'Roboto', 'Open Sans'];
 
 ?>
@@ -107,7 +130,7 @@ function wsa_options_page()
                     </tr>
                     <tr>
                         <th>Enable Box Shadow</th>
-                        <td><input type="checkbox" name="wsa_box_shadow_enabled" value="1" <?php checked(1, get_option('wsa_box_shadow_enabled'), true); ?> /></td>
+                        <td><input type="checkbox" name="wsa_box_shadow_enabled" value="1" <?php checked('1', get_option('wsa_box_shadow_enabled', '1'), true); ?> /></td>
                     </tr>
                     <tr>
                         <th>Shadow X (px)</th>
@@ -123,7 +146,7 @@ function wsa_options_page()
                     </tr>
                     <tr>
                         <th>Enable Hover Shadow</th>
-                        <td><input type="checkbox" name="wsa_hover_box_shadow_enabled" value="1" <?php checked(1, get_option('wsa_hover_box_shadow_enabled'), true); ?> /></td>
+                        <td><input type="checkbox" name="wsa_hover_box_shadow_enabled" value="1" <?php checked('1', get_option('wsa_hover_box_shadow_enabled', '1'), true); ?> /></td>
                     </tr>
                     <tr>
                         <th>Hover Shadow X (px)</th>
@@ -142,7 +165,7 @@ function wsa_options_page()
                         <td>
                             <select name="wsa_font_family" id="wsa_font_family_select">
                                 <?php foreach ($fonts as $font): ?>
-                                    <option value="<?php echo $font; ?>" <?php selected(get_option('wsa_font_family'), $font); ?>><?php echo $font; ?></option>
+                                    <option value="<?php echo $font; ?>" <?php selected(get_option('wsa_font_family', 'sans-serif'), $font); ?>><?php echo $font; ?></option>
                                 <?php endforeach; ?>
                             </select>
                         </td>
@@ -178,7 +201,13 @@ function wsa_options_page()
                         <td><input type="number" id="wsa_size" name="wsa_icon_size" value="<?php echo esc_attr(get_option('wsa_icon_size', '30')); ?>" /></td>
                     </tr>
                 </table>
-                <?php submit_button(); ?>
+                <div style="display: flex; gap: 10px; align-items: center; margin-top: 20px;">
+                    <?php submit_button('Save Changes', 'primary', 'submit', false); ?>
+                    <?php submit_button('Reset Settings', 'secondary', 'wsa_reset_settings', false, [
+                        'formaction' => 'admin.php?page=what-snap-app',
+                        'onclick'    => "return confirm('Are you sure you want to reset all settings fresh from scratch?');"
+                    ]); ?>
+                </div>
             </div>
 
             <div style="background: #f9f9f9; padding: 30px; border: 1px solid #ddd; border-radius: 8px; flex: 1; text-align: center; position: sticky; top: 20px; align-self: flex-start;">
@@ -188,11 +217,11 @@ function wsa_options_page()
                     display: inline-flex; 
                     align-items: center; 
                     gap: 10px; 
-                    padding: 12px 20px; 
+                    padding: 8px 20px; 
                     border-radius: <?php echo esc_attr(get_option('wsa_border_radius', '30')); ?>px; 
                     text-decoration: none; 
                     background-color: <?php echo esc_attr(get_option('wsa_bg_color', '#25D366')); ?>; 
-                    color: <?php echo esc_attr(get_option('wsa_text_color', '#ffffff')); ?>;                    border: none;
+                    color: <?php echo esc_attr(get_option('wsa_text_color', '#ffffff')); ?>;border: none;
                     transition: transform 0.2s ease, box-shadow 0.2s ease;                ">
                     <span id="live-icon-wrapper" class="whatsapp-icon-wrapper" style="
                         display: flex; 
@@ -397,12 +426,12 @@ function wsa_inject_dynamic_css()
     $size = get_option('wsa_icon_size', '30');
 
     $br = get_option('wsa_border_radius', '50');
-    $shadow_enabled = get_option('wsa_box_shadow_enabled');
+    $shadow_enabled = get_option('wsa_box_shadow_enabled', '1');
     $shadow_x = get_option('wsa_box_shadow_x', '0');
     $shadow_y = get_option('wsa_box_shadow_y', '8');
     $shadow_color = get_option('wsa_box_shadow_color', '#000000');
 
-    $hover_enabled = get_option('wsa_hover_box_shadow_enabled');
+    $hover_enabled = get_option('wsa_hover_box_shadow_enabled', '1');
     $hover_x = get_option('wsa_hover_box_shadow_x', '0');
     $hover_y = get_option('wsa_hover_box_shadow_y', '14');
     $hover_color = get_option('wsa_hover_box_shadow_color', '#000000');
@@ -410,11 +439,14 @@ function wsa_inject_dynamic_css()
     $ff = get_option('wsa_font_family', 'sans-serif');
     $fw = get_option('wsa_font_weight', '700');
 
-    $base_shadow = $shadow_enabled
+    $is_shadow_on = ($shadow_enabled === '1' || $shadow_enabled === 1 || $shadow_enabled === true || $shadow_enabled === 'true');
+    $is_hover_shadow_on = ($hover_enabled === '1' || $hover_enabled === 1 || $hover_enabled === true || $hover_enabled === 'true');
+
+    $base_shadow = $is_shadow_on
         ? sprintf('%spx %spx 18px %s', $shadow_x, $shadow_y, wsa_hex_to_rgba($shadow_color, 0.18))
         : 'none';
 
-    $hover_shadow = $hover_enabled
+    $hover_shadow = $is_hover_shadow_on
         ? sprintf('%spx %spx 24px %s', $hover_x, $hover_y, wsa_hex_to_rgba($hover_color, 0.25))
         : $base_shadow;
 
@@ -464,11 +496,11 @@ add_action('rest_api_init', function () {
                 'button_text' => get_option('wsa_button_text', 'Chat on WhatsApp'),
                 'icon_bg_color'  => get_option('wsa_icon_bg_color', '#ffffff'),
                 'border_radius' => get_option('wsa_border_radius', '50'),
-                'box_shadow'    => get_option('wsa_box_shadow_enabled'),
+                'box_shadow'    => get_option('wsa_box_shadow_enabled', '1'),
                 'box_shadow_x'  => get_option('wsa_box_shadow_x', '0'),
                 'box_shadow_y'  => get_option('wsa_box_shadow_y', '8'),
                 'box_shadow_color' => get_option('wsa_box_shadow_color', '#000000'),
-                'hover_box_shadow' => get_option('wsa_hover_box_shadow_enabled'),
+                'hover_box_shadow' => get_option('wsa_hover_box_shadow_enabled', '1'),
                 'hover_box_shadow_x' => get_option('wsa_hover_box_shadow_x', '0'),
                 'hover_box_shadow_y' => get_option('wsa_hover_box_shadow_y', '14'),
                 'hover_box_shadow_color' => get_option('wsa_hover_box_shadow_color', '#000000'),
